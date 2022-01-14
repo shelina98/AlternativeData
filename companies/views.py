@@ -60,6 +60,12 @@ def companyUpdate(request, pk):
 
     return Response(serializer.data)
 
+@api_view(['DELETE'])
+def companyDelete(request, pk):
+    companyObj = Company.objects.get(id=pk)
+    companyObj.delete()
+    return Response('Item successfully deleted! ')
+
 
 class CompanyViewSet(ModelViewSet):
     queryset = Company.objects.all()
