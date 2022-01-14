@@ -50,6 +50,17 @@ def companyCreate(request):
     return Response(serializer.data)
 
 
+@api_view(['POST'])
+def companyUpdate(request, pk):
+    companyObj = Company.objects.get(id=pk)
+    serializer = CompanySerializer(instance=companyObj, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+
 class CompanyViewSet(ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
