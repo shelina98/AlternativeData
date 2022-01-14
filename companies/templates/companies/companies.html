@@ -1,0 +1,8 @@
+{% for company in Companies %}
+    <ul>
+
+
+        <li><a href="{% url 'company' company.id %}">  {{ company.name }} </a> </li>
+
+    </ul>
+{% endfor %}
