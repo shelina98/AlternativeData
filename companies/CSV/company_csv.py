@@ -1,10 +1,9 @@
-import csv
 import pandas as pd
 
-with open('companies_sample.csv', 'r') as companies_csv:
-    csv_reader = csv.reader(companies_csv)
+companies = pd.read_csv('companies_sample.csv', na_values='n/a')
 
+df2 = companies[(companies['country'] == 'United Kingdom')]
 
-   with open()
-    for line in csv_reader:
-        print(line)
+df2.to_csv('companiesUK.csv')
+
+companies.info()

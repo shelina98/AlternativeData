@@ -1,9 +1,11 @@
-from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
-from .serializer import CompanySerializer
+from .serializer import CompanySerializer, CompanyUploadSerializer
+
+from rest_framework import generics, status
+import pandas as pd
 
 # Create your views here.
 
@@ -12,7 +14,8 @@ from .models import Company
 
 def Companies(request):
     Companies = Company.objects.all()
-    context = {'Companies': Companies}
+    number = Companies.count()
+    context = {'Companies': Companies, 'number': number}
     return render(request, 'companies/companies.html', context)
 
 
@@ -60,13 +63,33 @@ def companyUpdate(request, pk):
 
     return Response(serializer.data)
 
+
 @api_view(['DELETE'])
 def companyDelete(request, pk):
     companyObj = Company.objects.get(id=pk)
     companyObj.delete()
-    return Response('Item successfully deleted! ')
+    return Response('Item successfully deleted!')
 
 
 class CompanyViewSet(ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+
+
+class UploadFileView(generics.CreateAPIView):
+    serializer_class = CompanyUploadSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        companyfile = serializer.validated_data['companyfile']
+        reader = pd.read_csv(companyfile)
+        for _, row in reader.iterrows():
+            new_company = Company(
+                name=row["name"],
+                vat=row['vat'],
+                country=row["country"],
+                sector=row["sector"]
+            )
+            new_company.save()
+        return Response({"status": "success"}, status.HTTP_201_CREATED)

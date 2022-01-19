@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
+from .views import UploadFileView
 
 urlpatterns = [
     path('', views.Companies, name='companies'),
@@ -12,6 +13,7 @@ urlpatterns = [
     path('company/<str:pk>/', views.singleCompany, name='company'),
 
     path('updatecompany/<str:pk>/', views.companyUpdate, name='updatecompany'),
-    path('deletecompany/<str:pk>/', views.companyDelete, name='deletecompany')
+    path('deletecompany/<str:pk>/', views.companyDelete, name='deletecompany'),
 
+    path('upload/', UploadFileView.as_view(), name='upload-file'),
 ]
