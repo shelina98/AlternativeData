@@ -2,10 +2,12 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
-from .serializer import CompanySerializer, CompanyUploadSerializer
-
+from companies.serializers.serializer import CompanySerializer, CompanyUploadSerializer
 from rest_framework import generics, status
 import pandas as pd
+
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 # Create your views here.
 
@@ -72,8 +74,8 @@ def companyDelete(request, pk):
 
 
 class CompanyViewSet(ModelViewSet):
-    queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    queryset = Company.objects.all()
 
 
 class UploadFileView(generics.CreateAPIView):

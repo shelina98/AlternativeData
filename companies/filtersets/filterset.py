@@ -1,8 +1,8 @@
-import django_filters
+from django_filters import rest_framework as filters
+from companies.models import Company
 
-from .models import Company
 
-
-class CompanyFilter(django_filters.FilterSet):
+class CompanyFilter(filters.FilterSet):
     class Meta:
         model = Company
+        fields = ["name", "vat"]

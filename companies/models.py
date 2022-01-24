@@ -7,8 +7,8 @@ from django.db import models
 
 
 class Company(models.Model):
-    name = models.CharField(max_length=200, blank=True, null=True)
-    vat = models.CharField(max_length=200, blank=True, null=True, unique=True, editable=False)
+    name = models.CharField(max_length=200,  null=False, blank=False)
+    vat = models.CharField(max_length=200, unique=True, editable=False, null=False, blank=False)
     country = models.CharField(max_length=200, blank=True, null=True)
     sector = models.CharField(max_length=200, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -18,5 +18,4 @@ class Company(models.Model):
     def __str__(self):
         return str(self.name)
 
-    class Meta:
-        unique_together = ["name", "id"]
+

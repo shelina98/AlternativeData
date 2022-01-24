@@ -1,6 +1,8 @@
-from django.urls import path, re_path
+from django.urls import path
 from . import views
 from .views import UploadFileView
+from companies.viewsets.company_viewset import CompanyViewSet
+from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path('', views.Companies, name='companies'),
@@ -17,3 +19,7 @@ urlpatterns = [
 
     path('upload/', UploadFileView.as_view(), name='upload-file'),
 ]
+
+router = DefaultRouter()
+router.register(r'companies', CompanyViewSet, basename='companies')
+urlpatterns += router.urls
