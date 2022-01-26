@@ -1,3 +1,4 @@
+import django_filters
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -6,6 +7,8 @@ from companies.serializers.serializer import CompanySerializer, CompanyUploadSer
 from rest_framework import generics, status
 import pandas as pd
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from companies.filtersets.filterset import CompanyFilter
 from rest_framework.filters import SearchFilter, OrderingFilter
 # Create your views here.
 from companies.models import Company
@@ -73,6 +76,8 @@ def companyDelete(request, pk):
 class CompanyViewSet(ModelViewSet):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['^vat']
 
 
 class UploadFileView(generics.CreateAPIView):
