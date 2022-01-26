@@ -5,13 +5,10 @@ from rest_framework.viewsets import ModelViewSet
 from companies.serializers.serializer import CompanySerializer, CompanyUploadSerializer
 from rest_framework import generics, status
 import pandas as pd
-
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-
 # Create your views here.
-
-from .models import Company
+from companies.models import Company
 
 
 def Companies(request):
