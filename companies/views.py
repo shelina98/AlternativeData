@@ -1,87 +1,26 @@
-import django_filters
-from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.viewsets import ModelViewSet
-from companies.serializers.serializer import CompanySerializer, CompanyUploadSerializer
+from companies.serializers.serializer import CompanyUploadSerializer, UserSerializer
 from rest_framework import generics, status
+from rest_framework import permissions
 import pandas as pd
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from companies.filtersets.filterset import CompanyFilter
-from rest_framework.filters import SearchFilter, OrderingFilter
 # Create your views here.
 from companies.models import Company
+from django.contrib.auth.models import User
 
 
-def Companies(request):
-    Companies = Company.objects.all()
-    number = Companies.count()
-    context = {'Companies': Companies, 'number': number}
-    return render(request, 'companies/companies.html', context)
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
-@api_view(['GET'])
-def apiOverview(request):
-    api_urls = {
-        'List': '/task-list/',
-        'Detail View': '/task-detail/<str:pk>/',
-        'Create': '/task-create/',
-    }
-    return Response(api_urls)
-
-
-@api_view(['GET'])
-def companyList(request):
-    companies = Company.objects.all()
-    serializer = CompanySerializer(companies, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def singleCompany(request, pk):
-    CompanyObj = Company.objects.get(id=pk)
-    serializer = CompanySerializer(CompanyObj)
-    return Response(serializer.data)
-
-
-@api_view(['POST'])
-def companyCreate(request):
-    serializer = CompanySerializer(data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
-
-
-@api_view(['POST'])
-def companyUpdate(request, pk):
-    companyObj = Company.objects.get(id=pk)
-    serializer = CompanySerializer(instance=companyObj, data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
-
-
-@api_view(['DELETE'])
-def companyDelete(request, pk):
-    companyObj = Company.objects.get(id=pk)
-    companyObj.delete()
-    return Response('Item successfully deleted!')
-
-
-class CompanyViewSet(ModelViewSet):
-    serializer_class = CompanySerializer
-    queryset = Company.objects.all()
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['^vat']
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class UploadFileView(generics.CreateAPIView):
     serializer_class = CompanyUploadSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

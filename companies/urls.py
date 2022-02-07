@@ -1,31 +1,18 @@
 from django.urls import path
-from . import views
-from companies.views import UploadFileView
+from companies.views import UploadFileView, UserList, UserDetail
 from companies.viewsets.company_viewset import CompanyViewSet
 from rest_framework.routers import DefaultRouter
-from .CompanyExternalData_views import perform_google_search, companyExternalDataList, singleCompanyExternalData
+from companies.viewsets.CompanyExternalData_viewset import CompanyExternalDataViewSet
+from companies.viewsets.user_viewset import UserViewSet
 
 urlpatterns = [
-    path('', views.Companies, name='companies'),
-
-    path('api/', views.apiOverview, name='api-overview'),
-
-    path('createcompany/', views.companyCreate, name='createcompany'),
-
-    path('listcompany/', views.companyList, name='listcompany'),
-    path('company/<str:pk>/', views.singleCompany, name='company'),
-
-    path('updatecompany/<str:pk>/', views.companyUpdate, name='updatecompany'),
-    path('deletecompany/<str:pk>/', views.companyDelete, name='deletecompany'),
-
-    path('upload/', UploadFileView.as_view(), name='upload-file'),
-
-
-    path('perform-google-search/', perform_google_search, name='search'),
-    path('listcompanyexternal/', companyExternalDataList, name='listcompanyE'),
-    path('companyE/<str:pk>/', singleCompanyExternalData, name='companyE'),
+    path('UploadWithCSV/', UploadFileView.as_view(), name='upload-file'),
+    path('users/', UserList.as_view()),
+    path('user/<int:pk>/', UserDetail.as_view()),
 ]
 
 router = DefaultRouter()
 router.register(r'companies', CompanyViewSet, basename='companies')
+router.register(r'usersWITHVS', UserViewSet, basename='usersWITHVS')
+router.register(r'companies_external_data', CompanyExternalDataViewSet, basename='companies_external_data')
 urlpatterns += router.urls

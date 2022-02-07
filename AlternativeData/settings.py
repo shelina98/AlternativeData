@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS':
         ['django_filters.rest_framework.DjangoFilterBackend'],
-
 }
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,9 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'companies.apps.CompaniesConfig',
     'rest_framework',
+    'rest_framework.authtoken',
     'googlesearch',
     'googleapiclient',
     'django_filters',
+    'django_redis',
+    'drf_spectacular',
+
+
 ]
 
 MIDDLEWARE = [

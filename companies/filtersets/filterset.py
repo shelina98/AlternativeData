@@ -5,4 +5,4 @@ from companies.models import Company
 class CompanyFilter(filters.FilterSet):
     class Meta:
         model = Company
-        fields = ["name", "vat"]
+        fields = ["name", "vat", 'country', 'sector']
